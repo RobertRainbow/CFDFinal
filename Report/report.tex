@@ -1,0 +1,190 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[12pt,a4paper]{article}% 文档格式
+\usepackage{ctex,hyperref}% 输出汉字
+\usepackage{times}% 英文使用Times New Roman
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{\fontsize{18pt}{27pt}\selectfont% 小四字号，1.5倍行距
+	{\heiti% 黑体 
+		计算流体力学期末作业}}% 题目
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\author{\fontsize{12pt}{18pt}\selectfont% 小四字号，1.5倍行距
+	{\fangsong% 仿宋
+		曹林博 \quad 2200011012}} % 标题栏脚注
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\date{}% 日期（这里避免生成日期）
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath,amsfonts,amssymb}% 为公式输入创造条件的宏包
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{graphicx}% 图片插入宏包
+\usepackage{subfigure}% 并排子图
+\usepackage{float}% 浮动环境，用于调整图片位置
+\usepackage[export]{adjustbox}% 防止过宽的图片
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{bibentry}
+\usepackage{natbib}% 以上2个为参考文献宏包
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{abstract}% 两栏文档，一栏摘要及关键字宏包
+\renewcommand{\abstracttextfont}{\fangsong}% 摘要内容字体为仿宋
+\renewcommand{\abstractname}{\textbf{摘\quad 要}}% 更改摘要二字的样式
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xcolor}% 字体颜色宏包
+\newcommand{\red}[1]{\textcolor[rgb]{1.00,0.00,0.00}{#1}}
+\newcommand{\blue}[1]{\textcolor[rgb]{0.00,0.00,1.00}{#1}}
+\newcommand{\green}[1]{\textcolor[rgb]{0.00,1.00,0.00}{#1}}
+\newcommand{\darkblue}[1]
+{\textcolor[rgb]{0.00,0.00,0.50}{#1}}
+\newcommand{\darkgreen}[1]
+{\textcolor[rgb]{0.00,0.37,0.00}{#1}}
+\newcommand{\darkred}[1]{\textcolor[rgb]{0.60,0.00,0.00}{#1}}
+\newcommand{\brown}[1]{\textcolor[rgb]{0.50,0.30,0.00}{#1}}
+\newcommand{\purple}[1]{\textcolor[rgb]{0.50,0.00,0.50}{#1}}% 为使用方便而编辑的新指令
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{url}% 超链接
+\usepackage{bm}% 加粗部分公式
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{epstopdf}
+\usepackage{epsfig}
+\usepackage{longtable}% 长表格
+\usepackage{supertabular}% 跨页表格
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{changepage}% 换页
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{enumerate}% 短编号
+\usepackage{caption}% 设置标题
+\captionsetup[figure]{name=\fontsize{10pt}{15pt}\selectfont Figure}% 设置图片编号头
+\captionsetup[table]{name=\fontsize{10pt}{15pt}\selectfont Table}% 设置表格编号头
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{indentfirst}% 中文首行缩进
+\usepackage[left=2.50cm,right=2.50cm,top=2.80cm,bottom=2.50cm]{geometry}% 页边距设置
+\renewcommand{\baselinestretch}{1.5}% 定义行间距（1.5）
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{fancyhdr} %设置全文页眉、页脚的格式
+\pagestyle{fancy}
+\hypersetup{colorlinks=true,linkcolor=black}% 去除引用红框，改变颜色
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\begin{document}
+	\maketitle
+	
+	\section{数理算法原理}
+		\subsection{问题描述}
+		 针对Sod激波管问题，求解一维欧拉方程：
+		 \[
+		 	\frac{\partial \mathbf{U}}{\partial t} + \frac{\partial \mathbf{f}(\mathbf{U})}{\partial x} = 0.
+		 \]
+		 其中：
+		 \[
+		 \mathbf{U} = 
+		 \begin{bmatrix}
+		 	\rho \\
+		 	\rho u \\
+		 	E
+		 \end{bmatrix}, \quad
+		 \mathbf{f}(\mathbf{U}) = 
+		 \begin{bmatrix}
+		 	\rho u \\
+		 	\rho u^2 + p \\
+		 	u(E + p)
+		 \end{bmatrix}, \quad
+		 E = \rho e = \rho \left( C_v T + \frac{1}{2} u^2 \right)
+		 \]
+		 初始条件（在 $t=0$）为：
+		 \[
+		 \begin{cases}
+		 	x < 0: & (\rho_L, u_L, p_L) = (1,\, 0,\, 1), \\
+		 	x \ge 0: & (\rho_R, u_R, p_R) = (0.125,\, 0,\, 0.1).
+		 \end{cases}
+		 \]
+		 
+		 \subsection{Riemann精确解}
+		 该问题流程中，在连续部分满足控制方程：
+		 \[
+		 \left\{
+		 \begin{aligned}
+		 	&\frac{\partial \rho}{\partial t} + \frac{\partial (\rho u)}{\partial x} = 0 \\
+		 	&\frac{\partial (\rho u)}{\partial t} + \frac{\partial (\rho u^2 + p)}{\partial x} = 0 \\
+		 	&\frac{\partial (E)}{\partial t} + \frac{\partial (E u + p u)}{\partial x} = 0
+		 \end{aligned}
+		 \right.
+		 \]
+		 其中，$E = \rho e = \rho (C_v T + \frac{1}{2} u^2)$.
+		 
+		 在间断部分满足间断条件$\mathbf{Rankine-Hugoniot}$关系式：
+		 \[
+		 \left\{
+		 \begin{aligned}
+		 	& \rho_1(u_1 - Z) = \rho_2(u_2 - Z) \\
+		 	& \rho_1 u_1(u_1 - Z) + p_1 = \rho_2 u_2(u_2 - Z) + p_2 \\
+		 	& E_1(u_1 - Z) + u_1 p_1 = E_2(u_2 - Z) + u_2 p_2
+		 \end{aligned}
+		 \right.
+		 \]
+		 其中，$\mathbf{Z}$为激波运动速度。
+		 
+		 满足以上两个方程组的流场中可能产生三种波：
+		 \begin{enumerate}
+		 	\item \textbf{激波：} 密度、速度、压力突变，满足$\mathbf{Rankine-Hugoniot}$关系式。
+		 	\item \textbf{膨胀波：}等熵波，内部物理量连续光滑，头尾物理量连续但导数不连续.
+		 	\item \textbf{接触间断：}两侧速度、压力相同，仅密度突变。
+		 \end{enumerate}
+		 
+		 因此流场组合共有以下五种：
+		\begin{enumerate}
+			\item 激波、接触间断、激波
+			\item 膨胀波、接触间断、激波
+			\item 激波、接触间断、膨胀波
+			\item 膨胀波、接触间断、膨胀波
+			\item 膨胀波、膨胀波
+		\end{enumerate}
+		 
+		 经过对上述情况分析，我们将激波、膨胀波前后速度-压力的依赖关系写成统一的形式：
+		 \begin{enumerate}
+		 	\item 左波（激波或膨胀波） $u^* = u_1 - f(p^*,p_1,\rho_1)$
+		 	\item 右波（激波或膨胀波） $u^* = u_2 + f(p^*,p_2,\rho_2)$
+		 \end{enumerate}
+		 其中，$u^*,p^*$表示接触间断速度和压力，且有：
+		 \[
+		 f(p^*,p_i,\rho_i) = 
+		 \left\{
+		 \begin{aligned}
+		 	& \frac{p^* - p_i}{\rho_i c_i[\frac{\gamma+1}{2\gamma} (\frac{p^*}{p_i}) + \frac{\gamma-1}{2\gamma}]^{1/2}},\quad p^*>p_i \\
+		 	& \frac{2c_i}{\gamma-1}[(\frac{p^*}{p_i})^{\frac{\gamma-1}{2\gamma}} - 1],\quad p^*<p_i
+		 \end{aligned}
+		 \right.
+		 \]
+		 
+		 基于上述分析，我们可编写代码并求出Riemann精确解。
+		 
+	\section{代码生成与调试}
+		\subsection{Riemann精确解}
+		我们在riemann.m文件中完成对Sod问题的Riemann精确解求解。算法流程分为以下三个步骤：
+		\begin{enumerate}
+			\item 根据公式$F(p^*) = f(p^*,p_1,\rho_1) + f(p^*,p_2,\rho_2) - u_1 + u_2$，利用牛顿迭代法求解中心区域压力值。
+			\item 根据公式$u^* = \frac{1}{2}[u_1 + u_2 + f(p^*,p_2,\rho_2) - f(p^*,p_1,\rho_1)]$计算中心区域速度。并按前述公式确定两侧行波类型，计算中心区接触间断两侧的密度以及左右行波传播速度，及膨胀波区域内物理量。
+			\item 将求解结果保存为三个视频，以可视化结果。
+		\end{enumerate}
+		
+	\section{结果讨论}
+		\subsection{Riemann精确解}
+		\begin{figure}[H]
+			\centering
+			\begin{minipage}{0.83\textwidth}
+				\centering
+				\includegraphics[width=\textwidth]{./fig/Riemann.png}
+				\caption{\fontsize{10pt}{15pt}\selectfont Riemann精确解}
+			\end{minipage}
+		\end{figure}
+		结果表明，该问题解为右行激波、左行膨胀波的情况，并分别展示了速度、压强和密度的演化。在密度结果图中我们也发现了接触间断的位置。
+	
+	\section{附录}
+	\begin{enumerate}
+		\item 本题在作流场二次涡图时使用chatGPT帮助撰写绘图matlab代码。
+		\item 本题代码文件设置较为清楚，且较为简单，故不使用git管理增加负担，无git管理记录。
+	\end{enumerate}
+	
+\end{document}
+

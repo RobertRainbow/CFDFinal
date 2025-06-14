@@ -1,0 +1,96 @@
+clear;
+clc;
+
+%% 参数设置
+global gamma p1 rho1 c1 p2 rho2 c2 u1 u2;
+global p_star % 储存计算得到的全局变量p_star
+gamma = 1.4;R = 8.314;
+u1 = 0;u2 = 0;
+p1 = 1;rho1 = 1;c1 = sqrt(gamma*p1/rho1);
+p2 = 0.1;rho2 = 0.125;c2 = sqrt(gamma*p2/rho2);
+
+%% 函数F(p_star)展示
+p_star = 0:0.001:2;
+y = zeros(1,length(p_star));
+for i = 1:length(p_star)
+    y(i) = F(p_star(i));
+end
+figure(1);
+plot(p_star,y,'LineWidth',2);
+legend("F")
+
+%% 设定迭代控制条件
+residual_newton_max = 0.0001;
+residual_newton = 1E5;
+newton_count_max = 20;
+%% 迭代公式 p_star_new=p_satr-F(p_star)/F_diff(p_star)
+p_star0 = (p1+p2)/2;p_star = p_star0;% 首先给定初值
+delta_p_star = 0;newton_count = 0;
+while(residual_newton > residual_newton_max && newton_count < newton_count_max)
+    delta_p_star = -F(p_star)/F_diff(p_star);
+    p_star = p_star + delta_p_star;
+    if (newton_count == 0)
+        p_star0 = p_star;
+    end
+    newton_count=newton_count+1 ;
+    residual_newton = abs(delta_p_star)/p_star0;
+end
+
+%% 求解
+global u_star % 储存计算得到的全局变量p_star 
+global rho_star_L rho_star_R cL cR Z1_head Z1_tail Z2_head Z2_tail;
+%% 中心区域  
+if(p_star >= p1)
+    f1 = (p_star - p1)/rho1/c1/((gamma+1)/2/gamma *(p_star/p1) + (gamma-1)/2/gamma)^0.5;
+end
+if(p_star <p1)
+    f1 = 2*c1/(gamma-1)*((p_star/p1)^((gamma-1)/2/gamma) - 1);
+end
+if(p_star >= p2)
+    f2 = (p_star - p2)/rho2/c2/((gamma+1)/2/gamma *(p_star/p2) + (gamma-1)/2/gamma)^0.5;
+end
+if(p_star <p2)
+    f2 = 2*c2/(gamma-1)*((p_star/p2)^((gamma-1)/2/gamma) - 1);
+end
+u_star=(u1+u2-f1+f2)/2;
+
+%% F_diff(p_star) 导数（牛顿迭代公式的分母）
+function[y] = F_diff(p_star)
+global gamma p1 rho1 c1 p2 rho2 c2 u1 u2;
+if(p_star >= p1)
+    f1_diff = (( (gamma+1)/2 *(p_star/p1) + (gamma-1)/2/gamma )^0.5 - ...
+        (p_star-p1)/2*( (gamma+1)/2/gamma *(p_star/p1) + (gamma-1)/2/gamma)^(-0.5) * (gamma+1)/2/gamma/p1)...
+        /(rho1*c1*((gamma+1)/2/gamma *p_star/p1  + (gamma-1)/2/gamma));
+end
+if(p_star <p1)
+    f1_diff = c1/gamma*(p_star/p1)^((gamma-1)/2/gamma)*(p_star)^(-1);
+end
+if(p_star>=p2)
+    f2_diff = (( (gamma+1)/2 *(p_star/p2) + (gamma-1)/2/gamma )^0.5 - ...
+        (p_star-p2)/2*( (gamma+1)/2/gamma *(p_star/p2) + (gamma-1)/2/gamma)^(-0.5) * (gamma+1)/2/gamma/p2)...
+        /(rho2*c2*((gamma+1)/2/gamma *p_star/p2  + (gamma-1)/2/gamma));
+end
+if(p_star <p2)
+    f2_diff = c2/gamma*(p_star/p2)^((gamma-1)/2/gamma)*(p_star)^(-1);
+end
+y = f1_diff+f2_diff;
+end
+
+%% F(p_star)
+function[y] = F(p_star)
+global gamma p1 rho1 c1 p2 rho2 c2 u1 u2;
+if(p_star >= p1)
+    f1 = (p_star - p1)/rho1/c1/( (gamma+1)/2/gamma *(p_star/p1) + (gamma-1)/2/gamma)^0.5;
+end
+if(p_star <p1)
+    f1 = 2*c1/(gamma-1)*((p_star/p1)^((gamma-1)/2/gamma) - 1);
+end
+if(p_star>=p2)
+    f2 = (p_star - p2)/rho2/c2/( (gamma+1)/2/gamma *(p_star/p2) + (gamma-1)/2/gamma)^0.5;
+end
+if(p_star <p2)
+    f2 = 2*c2/(gamma-1)*((p_star/p2)^((gamma-1)/2/gamma) - 1);
+end
+y = f1+f2-u1+u2 ;
+end
+
