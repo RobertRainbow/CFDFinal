@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2024.2.17)  14 JUN 2025 14:14
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2024.2.17)  15 JUN 2025 01:53
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -970,15 +970,15 @@ LaTeX Font Warning: Font shape `TU/ptm/b/n' undefined
 ]
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 166.
+(Font)              using `TU/ptm/m/it' instead on input line 164.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/m/it' undefined
-(Font)              using `TU/ptm/m/n' instead on input line 166.
+(Font)              using `TU/ptm/m/n' instead on input line 164.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 166.
+(Font)              using `TU/ptm/m/it' instead on input line 164.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -989,16 +989,13 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [2]
-File: ./fig/Riemann.png Graphic file (type bmp)
-<./fig/Riemann.png>
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 222.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 183.
-
-
-LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 183.
+(Font)              using `TU/ptm/m/it' instead on input line 222.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1009,17 +1006,16 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [3]
-
-Package caption Warning: Unused \captionsetup[table] on input line 57.
-See the caption package documentation for explanation.
-
-
-LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 189.
+File: ./fig/Riemann.png Graphic file (type bmp)
+<./fig/Riemann.png>
 
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 189.
+(Font)              using `TU/ptm/m/it' instead on input line 247.
+
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 247.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1029,20 +1025,67 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[4] (./report.aux)
+[4]
+File: ./fig/app1.png Graphic file (type bmp)
+<./fig/app1.png>
+
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 258.
+
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 258.
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[5]
+
+Package caption Warning: Unused \captionsetup[table] on input line 57.
+See the caption package documentation for explanation.
+
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 266.
+
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 266.
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[6] (./report.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: 5C33B687D17284A95F12A715C79B7D72;761.
+
+Package rerunfilecheck Warning: File `report.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `report.out':
+(rerunfilecheck)             Before: FD5084085211481421B5C1B37B4F5D97;889
+(rerunfilecheck)             After:  8131894AF6C0377D51F947804C455ED8;1147.
  ) 
 Here is how much of TeX's memory you used:
- 20170 strings out of 476683
- 417424 string characters out of 5804929
- 1861012 words of memory out of 5000000
- 40048 multiletter control sequences out of 15000+600000
- 527338 words of font info for 117 fonts, out of 8000000 for 9000
+ 20184 strings out of 476683
+ 417715 string characters out of 5804929
+ 1862012 words of memory out of 5000000
+ 40059 multiletter control sequences out of 15000+600000
+ 527354 words of font info for 119 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 89i,11n,117p,384b,594s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 89i,12n,117p,384b,594s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on report.pdf (4 pages).
+Output written on report.pdf (6 pages).

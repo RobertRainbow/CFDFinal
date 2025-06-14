@@ -72,67 +72,67 @@
 	
 	\section{数理算法原理}
 		\subsection{问题描述}
-		 针对Sod激波管问题，求解一维欧拉方程：
-		 \[
+		针对Sod激波管问题，求解一维欧拉方程：
+		\[
 		 	\frac{\partial \mathbf{U}}{\partial t} + \frac{\partial \mathbf{f}(\mathbf{U})}{\partial x} = 0.
-		 \]
-		 其中：
-		 \[
-		 \mathbf{U} = 
-		 \begin{bmatrix}
+		\]
+		其中：
+		\[
+		\mathbf{U} = 
+		\begin{bmatrix}
 		 	\rho \\
 		 	\rho u \\
 		 	E
-		 \end{bmatrix}, \quad
-		 \mathbf{f}(\mathbf{U}) = 
-		 \begin{bmatrix}
+		\end{bmatrix}, \quad
+		\mathbf{f}(\mathbf{U}) = 
+		\begin{bmatrix}
 		 	\rho u \\
 		 	\rho u^2 + p \\
 		 	u(E + p)
-		 \end{bmatrix}, \quad
-		 E = \rho e = \rho \left( C_v T + \frac{1}{2} u^2 \right)
-		 \]
-		 初始条件（在 $t=0$）为：
-		 \[
-		 \begin{cases}
+		\end{bmatrix}, \quad
+		E = \rho e = \rho \left( C_v T + \frac{1}{2} u^2 \right)
+		\]
+		初始条件（在 $t=0$）为：
+		\[
+		\begin{cases}
 		 	x < 0: & (\rho_L, u_L, p_L) = (1,\, 0,\, 1), \\
 		 	x \ge 0: & (\rho_R, u_R, p_R) = (0.125,\, 0,\, 0.1).
-		 \end{cases}
-		 \]
-		 
-		 \subsection{Riemann精确解}
-		 该问题流程中，在连续部分满足控制方程：
-		 \[
-		 \left\{
-		 \begin{aligned}
+		\end{cases}
+		\]
+		
+		\subsection{Riemann精确解}
+		该问题流程中，在连续部分满足控制方程：
+		\[
+		\left\{
+		\begin{aligned}
 		 	&\frac{\partial \rho}{\partial t} + \frac{\partial (\rho u)}{\partial x} = 0 \\
 		 	&\frac{\partial (\rho u)}{\partial t} + \frac{\partial (\rho u^2 + p)}{\partial x} = 0 \\
 		 	&\frac{\partial (E)}{\partial t} + \frac{\partial (E u + p u)}{\partial x} = 0
-		 \end{aligned}
-		 \right.
-		 \]
-		 其中，$E = \rho e = \rho (C_v T + \frac{1}{2} u^2)$.
-		 
-		 在间断部分满足间断条件$\mathbf{Rankine-Hugoniot}$关系式：
-		 \[
-		 \left\{
-		 \begin{aligned}
+		\end{aligned}
+		\right.
+		\]
+		其中，$E = \rho e = \rho (C_v T + \frac{1}{2} u^2)$.
+		
+		在间断部分满足间断条件$\mathbf{Rankine-Hugoniot}$关系式：
+		\[
+		\left\{
+		\begin{aligned}
 		 	& \rho_1(u_1 - Z) = \rho_2(u_2 - Z) \\
 		 	& \rho_1 u_1(u_1 - Z) + p_1 = \rho_2 u_2(u_2 - Z) + p_2 \\
 		 	& E_1(u_1 - Z) + u_1 p_1 = E_2(u_2 - Z) + u_2 p_2
-		 \end{aligned}
-		 \right.
-		 \]
-		 其中，$\mathbf{Z}$为激波运动速度。
-		 
-		 满足以上两个方程组的流场中可能产生三种波：
-		 \begin{enumerate}
+		\end{aligned}
+		\right.
+		\]
+		其中，$\mathbf{Z}$为激波运动速度。
+		
+		满足以上两个方程组的流场中可能产生三种波：
+		\begin{enumerate}
 		 	\item \textbf{激波：} 密度、速度、压力突变，满足$\mathbf{Rankine-Hugoniot}$关系式。
 		 	\item \textbf{膨胀波：}等熵波，内部物理量连续光滑，头尾物理量连续但导数不连续.
 		 	\item \textbf{接触间断：}两侧速度、压力相同，仅密度突变。
-		 \end{enumerate}
-		 
-		 因此流场组合共有以下五种：
+		\end{enumerate}
+		
+		因此流场组合共有以下五种：
 		\begin{enumerate}
 			\item 激波、接触间断、激波
 			\item 膨胀波、接触间断、激波
@@ -140,25 +140,81 @@
 			\item 膨胀波、接触间断、膨胀波
 			\item 膨胀波、膨胀波
 		\end{enumerate}
-		 
-		 经过对上述情况分析，我们将激波、膨胀波前后速度-压力的依赖关系写成统一的形式：
-		 \begin{enumerate}
+		
+		经过对上述情况分析，我们将激波、膨胀波前后速度-压力的依赖关系写成统一的形式：
+		\begin{enumerate}
 		 	\item 左波（激波或膨胀波） $u^* = u_1 - f(p^*,p_1,\rho_1)$
 		 	\item 右波（激波或膨胀波） $u^* = u_2 + f(p^*,p_2,\rho_2)$
-		 \end{enumerate}
-		 其中，$u^*,p^*$表示接触间断速度和压力，且有：
-		 \[
-		 f(p^*,p_i,\rho_i) = 
-		 \left\{
-		 \begin{aligned}
+		\end{enumerate}
+		其中，$u^*,p^*$表示接触间断速度和压力，且有：
+		\[
+		f(p^*,p_i,\rho_i) = 
+		\left\{
+		\begin{aligned}
 		 	& \frac{p^* - p_i}{\rho_i c_i[\frac{\gamma+1}{2\gamma} (\frac{p^*}{p_i}) + \frac{\gamma-1}{2\gamma}]^{1/2}},\quad p^*>p_i \\
 		 	& \frac{2c_i}{\gamma-1}[(\frac{p^*}{p_i})^{\frac{\gamma-1}{2\gamma}} - 1],\quad p^*<p_i
-		 \end{aligned}
-		 \right.
-		 \]
+		\end{aligned}
+		\right.
+		\]
+		
+		基于上述分析，我们可编写代码并求出Riemann精确解。
 		 
-		 基于上述分析，我们可编写代码并求出Riemann精确解。
-		 
+		\subsection{NND+FVS+RK3方法}
+		接下来，我们首先从NND格式（群速度方法）入手撰写激波捕捉格式，然后使用FVS类下Steger\_Warming通量分裂方法进行通量处理，最后使用Runge-Kutta方法推进时间积分。
+		
+		通过通量的分解，我们可以得到原欧拉方程组的NND格式为：
+		\[
+			(\frac{dU}{dt})_j = -\frac{1}{\Delta x}(H_{j+\frac12} - H_{j-\frac12})
+		\]
+		其中
+		\begin{gather}
+			H_{j+\frac12} = F^{+}_{j+\frac12L} + F^{-}_{j+\frac12R} \\
+			F^{+}_{j+\frac12L} = F^+_j + \frac12 minmod(\Delta F^+_{j-1/2},\Delta F^+_{j+1/2}) \\
+			F^-_{j+\frac12R} = F^-_{j+1} - \frac12 minmod(\Delta F^-_{j+1/2} , \Delta F^-_{j+3/2})
+		\end{gather}
+		
+		而对于通量项，我们可由Steger\_Warming（FVS）通量分裂方法写为：
+		\[
+		\mathbf{f} = \frac{\rho}{2\gamma}
+		\begin{bmatrix}
+			2(\gamma - 1)\lambda_1 + \lambda_2 + \lambda_3 \\
+			2(\gamma - 1)\lambda_1 u + \lambda_2 (u + c) + \lambda_3 (u - c) \\
+			(\gamma - 1)\lambda_1 u^2 + \frac{(3 - \gamma)(\lambda_2 + \lambda_3)c^2}{2(\gamma - 1)} + \frac{\lambda_2 (u + c)^2}{2} + \frac{\lambda_3 (u - c)^2}{2}
+		\end{bmatrix}
+		\]
+		其中，
+		\[
+		\begin{aligned}
+			\text{当 } \lambda_i \geq 0,\quad & \lambda_i = \lambda_i,\quad \text{否则 } \lambda_i = 0,\quad \text{得到 } f^+ \\
+			\text{当 } \lambda_i < 0,\quad & \lambda_i = \lambda_i,\quad \text{否则 } \lambda_i = 0,\quad \text{得到 } f^-
+		\end{aligned}
+		\]
+		同时我们定义，
+		\[
+			minmod(x,y) = 
+			\begin{cases}
+				0, & xy \leq 0 \\
+				sign(x)\min(|x|,|y|), & xy>0
+			\end{cases}
+		\]
+		
+		空间离散化后我们将式子记为：
+		\[
+			(\frac{dU}{dt})_j = -\frac{1}{\Delta x}(H_{j+\frac12} - H_{j-\frac12}) = f(u)
+		\]
+		根据Runge-Kutta方法，我们由如下推进时间计算公式：
+		\[
+		\left\{
+			\begin{aligned}
+				& u_1 = u^n + \frac13 \Delta t f(u^n) \\
+				& u_2 = u^n + \frac21 \Delta t f(u_1) \\
+				& u^{n+1} = \frac14 (u^n+3u_1) + \frac34 \Delta t f(u_2)
+			\end{aligned}
+		\right.
+		\]
+		
+		基于上述推导，我们可求得Sod问题的近似解。
+		
 	\section{代码生成与调试}
 		\subsection{Riemann精确解}
 		我们在riemann.m文件中完成对Sod问题的Riemann精确解求解。算法流程分为以下三个步骤：
@@ -168,23 +224,44 @@
 			\item 将求解结果保存为三个视频，以可视化结果。
 		\end{enumerate}
 		
+		\subsection{NND+FVS+RK3方法}
+		我们在NND\_FVS\_RK3.m文件中完成对Sod问题的近似求解。算法流程大致分为以下几个步骤：
+		\begin{enumerate}
+			\item 计算声速和特征值。
+			\item 根据Steger\_Warming公式计算守恒量通量项。
+			\item 根据NND格式计算每个位置的通量及守恒量。
+			\item 利用Runge-Kutta方法完成时间步推进。
+			\item 将每次计算结果重画在画布上，从而方便展示结果动态变化过程，同时我们生成视频。
+		\end{enumerate}
+
 	\section{结果讨论}
 		\subsection{Riemann精确解}
+		\begin{figure}[H]
+		\centering
+		\begin{minipage}{0.83\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{./fig/Riemann.png}
+			\caption{\fontsize{10pt}{15pt}\selectfont Riemann精确解}
+		\end{minipage}
+		\end{figure}
+		结果表明，该问题解为右行激波、左行膨胀波的情况，并分别展示了速度、压强和密度的演化。在密度结果图中我们也发现了接触间断的位置。
+
+		\subsection{NND+FVS+RK3方法}
 		\begin{figure}[H]
 			\centering
 			\begin{minipage}{0.83\textwidth}
 				\centering
-				\includegraphics[width=\textwidth]{./fig/Riemann.png}
-				\caption{\fontsize{10pt}{15pt}\selectfont Riemann精确解}
+				\includegraphics[width=\textwidth]{./fig/app1.png}
+				\caption{\fontsize{10pt}{15pt}\selectfont NND+FVS+RK3方法近似解}
 			\end{minipage}
 		\end{figure}
-		结果表明，该问题解为右行激波、左行膨胀波的情况，并分别展示了速度、压强和密度的演化。在密度结果图中我们也发现了接触间断的位置。
-	
+		结果表明，该问题解与精确解相同。	
+			
 	\section{附录}
-	\begin{enumerate}
-		\item 本题在作流场二次涡图时使用chatGPT帮助撰写绘图matlab代码。
-		\item 本题代码文件设置较为清楚，且较为简单，故不使用git管理增加负担，无git管理记录。
-	\end{enumerate}
+		\begin{enumerate}
+			\item 本题在作流场二次涡图时使用chatGPT帮助撰写绘图matlab代码。
+			\item 本题代码文件设置较为清楚，且较为简单，故不使用git管理增加负担，无git管理记录。
+		\end{enumerate}
 	
 \end{document}
 
