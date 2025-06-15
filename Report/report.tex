@@ -90,7 +90,7 @@
 		 	\rho u^2 + p \\
 		 	u(E + p)
 		\end{bmatrix}, \quad
-		E = \rho e = \rho \left( C_v T + \frac{1}{2} u^2 \right)
+		E = \rho (e + \frac12 u^2) = \rho \left( C_v T + \frac{1}{2} u^2 \right)
 		\]
 		初始条件（在 $t=0$）为：
 		\[
@@ -215,6 +215,100 @@
 		
 		基于上述推导，我们可求得Sod问题的近似解。
 		
+		\subsection{WENO+FDS+RK3方法}
+		接下来，我们从HLLC格式（FDS）入手给出一种近似计算Riemann通量的方法，利用WENO格式构造U\_L,U\_R，使用Runge-Kutta方法推进时间求解。
+		
+		HLLC格式是基于HLL格式的改进格式，通过引入左行波、右行波和中间波，实现准确捕捉接触间断。首先我们估计左右波速：
+		\[
+		\begin{aligned}
+			S_L &= min(u_L,u_R) - max(a_L,a_R) \\
+			S_R &= max(u_L,u_R) + max(a_L,a_R)
+		\end{aligned}
+		\]
+		通过求解自守恒的Rankine-Hugoniot条件，我们可得接触面速度：
+		\[
+			S_M = \frac{p_R - p_L + \rho_L u_L(S_L - u_L) - \rho_R u_R(S_R - u_R)}{\rho_L(S_L - u_L) - \rho_R(S_R - u_R)}
+		\]
+		以及求得中间状态压强：
+		\[
+			p^* = \frac12 (p_L+p_R)+\frac12[\rho_L(S_L-u_L)(S_M-u_L)+\rho_R(S_R-u_R)(S_M-u_R)]
+		\]
+		并定义用于加入压力项的方向向量：
+		\[
+			D = [0,1,S_M]
+		\]
+		按照如下公式我们可以计算通量：
+		\[
+			f_{j+\frac12} = 
+			\left\{
+				\begin{aligned}
+					& f_L, \quad S_L \geq 0 \\
+					& f_R, \quad S_R \leq 0 \\
+					& \frac{S_M(S_L*U_L-f_L)+S_L*p^**D}{S_L - S_M}, \quad S_L\leq0,S_M\geq0 \\
+					& \frac{S_M(S_R*U_R-f_R)+S_R*p^**D}{S_R - S_M}, \quad S_R\geq0,S_M\leq0 \\
+				\end{aligned}
+			\right.
+		\]
+		
+		WENO作为高阶、非震荡格式的激波捕捉格式，通过加权不同基架系构造近似值。以构造$U_{i+\frac12}^+$为例，使用以下坐标系
+		\[
+			\begin{aligned}
+				S_0 &= {U_{i-2},U_{i-1},U_{i}} \\
+				S_1 &= {U_{i-1},U_i,U_{i+1}} \\
+				S_2 &= {U_{i},U_{i+1},U_{i+2}}
+			\end{aligned}
+		\]
+		对每组构造三阶近似：
+		\[
+			\begin{aligned}
+				U_0 &= \frac13 U_{i-2} - \frac76 U_{i-1} + \frac{11}{6} U_{i} \\
+				U_1 &= -\frac16 U_{i-1} + \frac56 U_{i} + \frac13 U_{i+1} \\
+				U_2 &= \frac13 U_{i} + \frac56 U_{i+1} -\frac16 U_{i+2}
+			\end{aligned}
+		\]
+		接下来按公式计算平滑指标：
+		\[
+			\begin{aligned}
+				\beta_0 &= \frac{13}{12}(f_{i-2} - 2f_{i-1} + f_i)^2 + \frac{1}{4}(f_{i-2} - 4f_{i-1} + 3f_i)^2 \\
+				\beta_1 &= \frac{13}{12}(f_{i-1} - 2f_i + f_{i+1})^2 + \frac{1}{4}(f_{i-1} - f_{i+1})^2 \\
+				\beta_2 &= \frac{13}{12}(f_i - 2f_{i+1} + f_{i+2})^2 + \frac{1}{4}(3f_i - 4f_{i+1} + f_{i+2})^2
+			\end{aligned}
+		\]
+		给定理想权重$d=[1,6,3]$，计算非线性权重为：
+		\[
+			\alpha_k = \frac{d_k}{(\epsilon + \beta_k)^2},\omega_k = \frac{\alpha_k}{\sum_j\alpha_j}
+		\]
+		从而最终构造$U$：
+		\[
+			U = \sum_{k=0}^{2} \omega_k U_k
+		\]
+		
+		Runge-Kutta方法如之前所述，便不再赘述。由此我们求近似解。
+		
+		\subsection{TVD方法}
+		接下来我们从TVD格式入手，构造限制器TVD格式，并使用高低通量计算公式计算边界通量，使用欧拉一阶向前算法推动时间步求解。
+		
+		考虑如下的离散方案：
+		\[
+			\frac{U_i^{n+1} - U_i^n}{\Delta t} = -\frac{1}{\Delta x}(F^n_{i+\frac12} - F^n_{i-\frac12})
+		\]
+		
+		在计算单元边通量时，我们采取高低通量与限制器结合的格式：
+		\[
+			F^n_{i+\frac12} = F^{Low}_{i+\frac12} - \phi(r_i)(F^{Low}_{i+\frac12} - F^{High}_{i+\frac12})
+		\]
+		其中，给定计算公式：
+		\[
+			\begin{aligned}
+				r_i &= \frac{U_i - U_{i-1}}{U_{i+1} - U_i} \\
+				F^{Low}_{i+\frac12} &= \frac12(F_i + F_{i+1}) - \frac{\Delta x}{2\Delta t}(U_{i+1} - U_i) \\
+				F^{High}_{i+\frac12} = \frac12(F_i + F_{i+1})
+			\end{aligned}
+		\]
+		
+		根据上述公式，我们可以推进计算近似解。
+		
+		
 	\section{代码生成与调试}
 		\subsection{Riemann精确解}
 		我们在riemann.m文件中完成对Sod问题的Riemann精确解求解。算法流程分为以下三个步骤：
@@ -231,6 +325,24 @@
 			\item 根据Steger\_Warming公式计算守恒量通量项。
 			\item 根据NND格式计算每个位置的通量及守恒量。
 			\item 利用Runge-Kutta方法完成时间步推进。
+			\item 将每次计算结果重画在画布上，从而方便展示结果动态变化过程，同时我们生成视频。
+		\end{enumerate}
+		
+		\subsection{WENO+FDS+RK3方法}
+		我们在WENO\_FDS\_RK3.m文件中完成对Sod问题的近似求解。算法流程大致分为以下几个步骤：
+		\begin{enumerate}
+			\item 根据WENO格式计算某位置处$U_L,U_R$。
+			\item 根据HLLC格式完成通量及守恒量计算。
+			\item 利用Runge-Kutta方法完成时间步推进。
+			\item 将每次计算结果重画在画布上，从而方便展示结果动态变化过程，同时我们生成视频。
+		\end{enumerate}
+		
+		\subsection{TVD方法}
+		我们在TVD.m文件中完成对Sod问题的近似求解。算法流程大致分为以下几个步骤：
+		\begin{enumerate}
+			\item 根据上述公式计算响应的低通量和高通量，以及计算相应的$r_i$。
+			\item 施加限制器，计算$F_{i+\frac12}$。
+			\item 利用Euler向前计算方法完成时间步推进。（尝试过RK3方法，但是效果并不如Euler方法好）
 			\item 将每次计算结果重画在画布上，从而方便展示结果动态变化过程，同时我们生成视频。
 		\end{enumerate}
 
@@ -253,6 +365,28 @@
 				\centering
 				\includegraphics[width=\textwidth]{./fig/app1.png}
 				\caption{\fontsize{10pt}{15pt}\selectfont NND+FVS+RK3方法近似解}
+			\end{minipage}
+		\end{figure}
+		结果表明，该问题解与精确解相同。	
+		
+		\subsection{WENO+FDS+RK3方法}
+		\begin{figure}[H]
+			\centering
+			\begin{minipage}{0.83\textwidth}
+				\centering
+				\includegraphics[width=\textwidth]{./fig/app2.png}
+				\caption{\fontsize{10pt}{15pt}\selectfont WENO+FDS+RK3方法近似解}
+			\end{minipage}
+		\end{figure}
+		结果表明，该问题解与精确解相同。	
+		
+		\subsection{TVD方法}
+		\begin{figure}[H]
+			\centering
+			\begin{minipage}{0.83\textwidth}
+				\centering
+				\includegraphics[width=\textwidth]{./fig/app3.png}
+				\caption{\fontsize{10pt}{15pt}\selectfont TVD方法近似解}
 			\end{minipage}
 		\end{figure}
 		结果表明，该问题解与精确解相同。	

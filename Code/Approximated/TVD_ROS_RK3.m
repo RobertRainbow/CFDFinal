@@ -1,7 +1,7 @@
 clear;
 clc;
 
-% In this code, we use TVD-minmod to reconstruct U_R and U_L, and use ROS
+% In this code, we use WENO to reconstruct U_R and U_L, and use ROS
 % to discrete space, and use RK3 as time-progress solver.
 
 global gamma p1 rho1 u1 p2 rho2 u2;

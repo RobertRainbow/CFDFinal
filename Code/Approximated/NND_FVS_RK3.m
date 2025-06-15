@@ -2,8 +2,7 @@ clear;
 clc;
 
 % In this code file, we use NND combining with FVS(Steger_Warming method)
-% to discrete space and solve without RK3
-
+% to discrete space and solve with RK3 to progress.
 %% 网格划分
 global gamma n_r n_l dx dt
 dx = 0.001;
