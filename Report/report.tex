@@ -159,7 +159,7 @@
 		
 		基于上述分析，我们可编写代码并求出Riemann精确解。
 		 
-		\subsection{NND+FVS+RK3方法}
+		\subsection{GVC+FVS+RK3方法}
 		接下来，我们首先从NND格式（GVC格式思想下一类具体实现方法）入手撰写激波捕捉格式，然后使用FVS类下Steger\_Warming通量分裂方法进行通量处理，最后使用Runge-Kutta方法推进时间积分。
 		
 		考察空间中心差分格式，针对$a>0$的情况，我们得到离散格式及其对应的修正方程分别为：
@@ -384,8 +384,8 @@
 			\item 将求解结果保存为三个视频，以可视化结果。
 		\end{enumerate}
 		
-		\subsection{NND+FVS+RK3方法}
-		我们在NND\_FVS\_RK3.m文件中完成对Sod问题的近似求解。算法流程大致分为以下几个步骤：
+		\subsection{GVC+FVS+RK3方法}
+		我们在GVC\_FVS\_RK3.m文件中完成对Sod问题的近似求解。算法流程大致分为以下几个步骤：
 		\begin{enumerate}
 			\item 计算声速和特征值。
 			\item 根据Steger\_Warming公式计算守恒量通量项。
@@ -416,7 +416,7 @@
 		\subsection{Riemann精确解}
 		\begin{figure}[H]
 		\centering
-		\begin{minipage}{0.83\textwidth}
+		\begin{minipage}{1\textwidth}
 			\centering
 			\includegraphics[width=\textwidth]{./fig/Riemann.png}
 			\caption{\fontsize{10pt}{15pt}\selectfont Riemann精确解}
@@ -439,7 +439,7 @@
 		\end{enumerate}
 		\begin{figure}[H]
 		\centering
-		\begin{minipage}{0.83\textwidth}
+		\begin{minipage}{1\textwidth}
 			\centering
 			\includegraphics[width=\textwidth]{./fig/u.png}
 			\caption{\fontsize{10pt}{15pt}\selectfont 不同网格精度下速度$u$的解曲线}
@@ -447,7 +447,7 @@
 		\end{figure}
 		\begin{figure}[H]
 			\centering
-			\begin{minipage}{0.83\textwidth}
+			\begin{minipage}{1\textwidth}
 				\centering
 				\includegraphics[width=\textwidth]{./fig/p.png}
 				\caption{\fontsize{10pt}{15pt}\selectfont 不同网格精度下压强$p$的解曲线}
@@ -455,7 +455,7 @@
 		\end{figure}
 		\begin{figure}[H]
 			\centering
-			\begin{minipage}{0.83\textwidth}
+			\begin{minipage}{1\textwidth}
 				\centering
 				\includegraphics[width=\textwidth]{./fig/rho.png}
 				\caption{\fontsize{10pt}{15pt}\selectfont 不同网格精度下密度$\rho$的解曲线}
@@ -464,13 +464,13 @@
 		整体而言，随着网格加密，数值解逐步逼近解析解，尤其在激波与接触面等间断区域表现出更高的分辨率和精度。
 		
 		
-		\subsection{NND+FVS+RK3方法}
+		\subsection{GVC+FVS+RK3方法}
 		\begin{figure}[H]
 			\centering
-			\begin{minipage}{0.83\textwidth}
+			\begin{minipage}{1\textwidth}
 				\centering
 				\includegraphics[width=\textwidth]{./fig/app1.png}
-				\caption{\fontsize{10pt}{15pt}\selectfont NND+FVS+RK3方法近似解}
+				\caption{\fontsize{10pt}{15pt}\selectfont GVC+FVS+RK3方法近似解}
 			\end{minipage}
 		\end{figure}
 		NND格式实现空间高阶重构，FVS方法处理通量，三阶RungeKutta格式进行时间推进。该组合兼具震波捕捉能力与无振荡性。左侧膨胀波区域密度与压强呈连续下降，速度线性上升，曲线形状平滑，较好还原解析解中的稀疏波；中间密度出现轻微但清晰的阶跃，速度与压强保持连续，未出现明显数值振荡，具有良好的非振荡性；右侧激波区域阶跃较为准确，表现出激波捕捉方面的稳健性。
@@ -478,7 +478,7 @@
 		\subsection{WENO+FDS+RK3方法}
 		\begin{figure}[H]
 			\centering
-			\begin{minipage}{0.83\textwidth}
+			\begin{minipage}{1\textwidth}
 				\centering
 				\includegraphics[width=\textwidth]{./fig/app2.png}
 				\caption{\fontsize{10pt}{15pt}\selectfont WENO+FDS+RK3方法近似解}
@@ -490,7 +490,7 @@
 		\subsection{TVD方法}
 		\begin{figure}[H]
 			\centering
-			\begin{minipage}{0.83\textwidth}
+			\begin{minipage}{1\textwidth}
 				\centering
 				\includegraphics[width=\textwidth]{./fig/app3.png}
 				\caption{\fontsize{10pt}{15pt}\selectfont TVD方法近似解}
@@ -502,7 +502,7 @@
 		我们将三种方法结果与精确解置于一张图，并总结如下表：
 		\begin{figure}[H]
 			\centering
-			\begin{minipage}{0.83\textwidth}
+			\begin{minipage}{1\textwidth}
 				\centering
 				\includegraphics[width=\textwidth]{./fig/u-2.png}
 				\caption{\fontsize{10pt}{15pt}\selectfont 不同求解方法速度$u$的解曲线}
@@ -510,7 +510,7 @@
 		\end{figure}
 		\begin{figure}[H]
 			\centering
-			\begin{minipage}{0.83\textwidth}
+			\begin{minipage}{1\textwidth}
 				\centering
 				\includegraphics[width=\textwidth]{./fig/p-2.png}
 				\caption{\fontsize{10pt}{15pt}\selectfont 不同求解方法压强$p$的解曲线}
@@ -518,7 +518,7 @@
 		\end{figure}
 		\begin{figure}[H]
 			\centering
-			\begin{minipage}{0.83\textwidth}
+			\begin{minipage}{1\textwidth}
 				\centering
 				\includegraphics[width=\textwidth]{./fig/rho-2.png}
 				\caption{\fontsize{10pt}{15pt}\selectfont 不同求解方法密度$\rho$的解曲线}
@@ -548,10 +548,108 @@
 			\end{tabular}
 		\end{table}
 		
+	\section{附加题}
+	\subsection{数学原理}
+		为了将特征重构法应用与FVS框架，我们采用基于NND+FVS+RK3.m代码文件，将NND格式改为特征重构保存与REC+FVS+RK3.m代码文件中。
+		
+		特征重构的不同点在于，将非线性项$\frac{\partial F}{\partial x}$改为$A\frac{\partial U}{\partial x}$，从而对$A$进行特征变换，在特征空间中计算通量$F$。
+		
+		考虑方程组
+		\[
+		\frac{\partial U}{\partial t} + \frac{\partial F}{\partial x} = 0 
+		\]
+		非守恒形式为
+		\[
+		\frac{\partial U}{\partial t} + A \frac{\partial U}{\partial x} = 0
+		\]
+		其中 $A = \frac{\partial F}{\partial U}$。这里 $U$ 和 $F$ 都是 $n$ 维矢量函数，$A$ 是 $n \times n$ 矩阵。由于方程组是双曲型的，要求矩阵 $A$ 有 $n$ 个实特征值，于是存在右特征向量矩阵 $R$，使得
+		\[
+		A = R \Lambda R^{-1}
+		\]
+		这里 $\Lambda = \mathrm{diag}(\lambda_1, \lambda_2, \cdots, \lambda_n)$ 为对角矩阵，$\lambda_i$ 是矩阵 $A$ 的特征值。引入向量 $W = R^{-1} U$，并以矩阵 $R^{-1}$ 左乘（7.114），得到
+		\[
+		\frac{\partial W}{\partial t} + \Lambda \frac{\partial W}{\partial x} = 0
+		\]
+		由于 $\Lambda$ 是对角矩阵，上方程组可写为分量形式：
+		\[
+		\frac{\partial w_i}{\partial t} + \lambda_i \frac{\partial w_i}{\partial x} = 0, \quad (i = 1, 2, \ldots, n)
+		\]
+		这已经是一个标量方程，对于它可以使用前面的 NND 格式，也就是说对方程（7.116）可以直接写出其 NND 格式。在将格式的表达式再回到左乘矩阵 $R$，便得到关于方程（7.113）的 NND 格式。为了表示的方便，引入对角矩阵的分解：
+		\[
+		\Lambda = \Lambda^+ + \Lambda^- = \mathrm{diag}(\lambda_1^+, \ldots, \lambda_n^+) + \mathrm{diag}(\lambda_1^-, \ldots, \lambda_n^-)
+		\]
+		其中,
+		\[
+		\lambda_i^{\pm} = \frac{\lambda_i \pm |\lambda_i|}{2}, \quad (i = 1, 2, \ldots, n)
+		\]
+		进一步可以引入矩阵 $A$ 的分解：
+		\[
+		A = A^+ + A^- = R \Lambda^+ R^{-1} + R \Lambda^- R^{-1}
+		\]
+		于是可得到关于通量 $\mathbf{F}$ 的分解：
+		\[
+		F = F^+ + F^- = A^+ U + A^- U
+		\]
+		这样再利用FVS通量分解法进行通量计算，即成功将特征重构应用于FVS框架中。
+		
+		\subsection{代码编写}
+		我们在REC\_FVS\_RK3.m文件中完成对Sod问题的近似求解。算法流程大致分为以下几个步骤：
+		\begin{enumerate}
+			\item 计算声速和特征值。
+			\item 根据特征重构法格式计算每个位置的通量及守恒量。
+			\item 根据NND通量分解格式计算每个位置的守恒量
+			\item 利用Runge-Kutta方法完成时间步推进。
+			\item 将每次计算结果重画在画布上，方便展示结果动态变化过程，同时方便我们生成视频。
+		\end{enumerate}
+		
+		\subsection{结果讨论}
+		\begin{figure}[H]
+			\centering
+			\begin{minipage}{1\textwidth}
+				\centering
+				\includegraphics[width=\textwidth]{./fig/app4.png}
+				\caption{\fontsize{10pt}{15pt}\selectfont 特征重构方法近似解}
+			\end{minipage}
+		\end{figure}
+		\begin{figure}[H]
+			\centering
+			\begin{minipage}{1\textwidth}
+				\centering
+				\includegraphics[width=\textwidth]{./fig/u-3.png}
+				\caption{\fontsize{10pt}{15pt}\selectfont 特征重构方法于保守量方法对比(速度$u$)}
+			\end{minipage}
+		\end{figure}
+		\begin{figure}[H]
+			\centering
+			\begin{minipage}{1\textwidth}
+				\centering
+				\includegraphics[width=\textwidth]{./fig/p-3.png}
+				\caption{\fontsize{10pt}{15pt}\selectfont 特征重构方法于保守量方法对比(压强$p$)}
+			\end{minipage}
+		\end{figure}
+		\begin{figure}[H]
+			\centering
+			\begin{minipage}{1\textwidth}
+				\centering
+				\includegraphics[width=\textwidth]{./fig/rho-3.png}
+				\caption{\fontsize{10pt}{15pt}\selectfont 特征重构方法于保守量方法对比(密度$\rho$)}
+			\end{minipage}
+		\end{figure}
+		图中显示了在特征变量空间中使用 NND 重构格式所得到的 Sod 激波问题数值解。整体解结构良好，各变量间断清晰、平滑区域高保真，未出现非物理震荡。图中保守变量与特征重构法的解相差不大是因为空间离散精度足够高。当空间离散精度降低时，与保守变量上的 NND 格式相比，特征重构显著提升了解的稳定性与局部保形性，尤其在接触间断与激波捕捉方面更为准确。结果表明，特征重构对于降低变量耦合带来的误差传播、提升非振荡性具有明显作用，是一种值得推广的改进策略。
+		
+		
 	\section{附录}
 		\begin{enumerate}
 			\item Github管理说明：
 			本项目存于RobertRainbow/CFDFinal/的仓库中，具体分为：README.md文件用于帮助用户了解仓库代码结构及内容；Request.pdf文件为大作业要求；Report文件夹为latex语言完成报告相关文件；Code文件夹为matlab代码用于求解本作业问题。管理记录见图：
+			\begin{figure}[H]
+				\centering
+				\begin{minipage}{0.83\textwidth}
+					\centering
+					\includegraphics[width=\textwidth]{./fig/git.png}
+					\caption{\fontsize{10pt}{15pt}\selectfont Github管理图}
+				\end{minipage}
+			\end{figure}
 			
 			\item AI使用说明：
 			本项目在进行Riemann精确解分析的时候使用了AI+网络资料搜索的部分代码参考，在完成其余各部分matlab代码时均为自己查阅相关书籍与论文时推导并编写的。总AI代码量约占100/1000=10%。
