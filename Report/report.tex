@@ -111,7 +111,7 @@
 		\end{aligned}
 		\right.
 		\]
-		其中，$E = \rho e = \rho (C_v T + \frac{1}{2} u^2)$.
+		其中，$E = \rho (e + \frac12 u^2) = \rho (C_v T + \frac{1}{2} u^2)$.
 		
 		在间断部分满足间断条件$\mathbf{Rankine-Hugoniot}$关系式：
 		\[
@@ -141,7 +141,7 @@
 			\item 膨胀波、膨胀波
 		\end{enumerate}
 		
-		经过对上述情况分析，我们将激波、膨胀波前后速度-压力的依赖关系写成统一的形式：
+		经过对上述五种情况分别分析（这里由于篇幅原因不予展示具体分析过程），我们将激波、膨胀波前后速度-压力的依赖关系写成统一的形式：
 		\begin{enumerate}
 		 	\item 左波（激波或膨胀波） $u^* = u_1 - f(p^*,p_1,\rho_1)$
 		 	\item 右波（激波或膨胀波） $u^* = u_2 + f(p^*,p_2,\rho_2)$
@@ -160,13 +160,79 @@
 		基于上述分析，我们可编写代码并求出Riemann精确解。
 		 
 		\subsection{NND+FVS+RK3方法}
-		接下来，我们首先从NND格式（群速度方法）入手撰写激波捕捉格式，然后使用FVS类下Steger\_Warming通量分裂方法进行通量处理，最后使用Runge-Kutta方法推进时间积分。
+		接下来，我们首先从NND格式（GVC格式思想下一类具体实现方法）入手撰写激波捕捉格式，然后使用FVS类下Steger\_Warming通量分裂方法进行通量处理，最后使用Runge-Kutta方法推进时间积分。
 		
-		通过通量的分解，我们可以得到原欧拉方程组的NND格式为：
+		考察空间中心差分格式，针对$a>0$的情况，我们得到离散格式及其对应的修正方程分别为：
+		\begin{gather}
+			(\frac{du}{dt})_j + a\frac{u_{j+1}-u_{j-1}}{2\Delta x} = 0 \\
+			u_t + au_x = -\frac{a\Delta x^2}{6}u_{xxx} - \frac{a\Delta x^4}{120}u_{xxxxx}+\cdots
+		\end{gather}
+		我们考察$\mu_3<0$，仅满足间断后的条件，可以预料最初的不合理解产生于间断前。
+		
+		考察二阶迎风格式，针对$a>0$的情况，我们可以得到离散格式及其修正方程分别为：
+		\begin{gather}
+			(\frac{du}{dt})_j + a\frac{3u_j - 4u_{j-1}+u_{j-2}}{2\Delta x} = 0 \\
+			u_t + au_x = \frac{a\Delta x^2}{3}(1-c^2)u_{xxx} + \frac{a\Delta x^3}{4}u_{xxxxx}+\cdots
+		\end{gather}
+		我们考察$\mu_3>0$，仅满足间断前的条件，可以预料到间断后首先出现非物理现象。
+		
+		根据上面分析，我们可以将两个不同的格式组合起来，构造出一个在间断前后都合理的格式，即得到GVC格式（书上写作NND格式）：
+		\[
+			(\frac{du}{dt})_j = 
+			\begin{cases}
+				-a\frac{3u_j - 4u_{j-1}+u_{j-2}}{2\Delta x}, & \text{间断前} \\
+				-a\frac{u_{j+1}-u_{j-1}}{2\Delta x}, & \text{间断后}
+			\end{cases}
+		\]
+		
+		针对一般方程
+		\[
+		\frac{\partial u}{\partial t} + \frac{\partial f}{\partial x} = 0
+		\]
+		这里 \(f = f(u)\) 是一个通量，可以分解为 \(f = f^+ + f^-\)。对例如 \(f = a u\) 的情况，定义
+		\[
+		f^+ = \frac{1}{2}(a + |a|)\,u,\qquad
+		f^- = \frac{1}{2}(a - |a|)\,u.
+		\]
+		于是得到如下的半离散格式：
+		\[
+		\left(\frac{du}{dt}\right)_j = 
+		\begin{cases}
+			-\frac{-3f_j^+ + 4f_{j-1}^+ + f_{j-2}^+}{2\Delta x} - \frac{f_{j+1}^- - f_{j-1}^-}{2\Delta x}, & \text{间断前} \\
+			-\frac{ f_{j+1}^+ - f_{j-1}^+ }{2\Delta x} - \frac{-3f_j^- + 4f_{j+1}^- - f_{j+2}^-}{2\Delta x}, & \text{间断后}
+		\end{cases}
+		\]
+		可以把上述数值格式统一写为如下守恒形式：
+		\[
+		(\frac{\partial u}{\partial t})_j = -\frac{1}{\Delta x}(h_{j+\frac12} - h_{j-\frac12}).
+		\]
+		其中，
+		\[
+			h_{j+\frac12} = f_{j+\frac12L}^+ + f_{j+\frac12R}^-
+		\]
+		\[
+		f_{j+\frac12L}^+ = 
+		\begin{cases}
+			f_j^+ + \frac12\Delta f_{j-1/2}^+, & 间断前 \\
+			f_j^+ + \frac12 \Delta f_{j+1/2}^+, & 间断后
+		\end{cases}
+		\]
+		\[
+		f_{j+\frac12R}^- = 
+		\begin{cases}
+			f_{j+1}^- - \frac12 \Delta f_{j+1/2}^-, & 间断前 \\
+			f_{j+1}^- - \frac12 \Delta f_{j+3/2}^-, & 间断后
+		\end{cases}
+		\]
+		\[
+			\Delta f_{j+1/2}^{\pm} = f_{j+1}^{\pm} - f_j^{\pm}
+		\]
+		
+		通过上述数学分析，我们可以结合通量的分解，得到原欧拉方程组的NND格式（GVC格式）为：
 		\[
 			(\frac{dU}{dt})_j = -\frac{1}{\Delta x}(H_{j+\frac12} - H_{j-\frac12})
 		\]
-		其中
+		其中，
 		\begin{gather}
 			H_{j+\frac12} = F^{+}_{j+\frac12L} + F^{-}_{j+\frac12R} \\
 			F^{+}_{j+\frac12L} = F^+_j + \frac12 minmod(\Delta F^+_{j-1/2},\Delta F^+_{j+1/2}) \\
@@ -182,7 +248,7 @@
 			(\gamma - 1)\lambda_1 u^2 + \frac{(3 - \gamma)(\lambda_2 + \lambda_3)c^2}{2(\gamma - 1)} + \frac{\lambda_2 (u + c)^2}{2} + \frac{\lambda_3 (u - c)^2}{2}
 		\end{bmatrix}
 		\]
-		其中，
+		其中我们定义$\lambda_1=u+c,\lambda_2=u,\lambda_3=u-c$，并规定：
 		\[
 		\begin{aligned}
 			\text{当 } \lambda_i \geq 0,\quad & \lambda_i = \lambda_i,\quad \text{否则 } \lambda_i = 0,\quad \text{得到 } f^+ \\
@@ -216,7 +282,7 @@
 		基于上述推导，我们可求得Sod问题的近似解。
 		
 		\subsection{WENO+FDS+RK3方法}
-		接下来，我们从HLLC格式（FDS）入手给出一种近似计算Riemann通量的方法，利用WENO格式构造U\_L,U\_R，使用Runge-Kutta方法推进时间求解。
+		接下来，我们从HLLC格式（FDS格式）入手给出一种计算一维Sod问题近似解的方法，利用WENO格式构造U\_L,U\_R，使用Runge-Kutta方法推进时间求解。
 		
 		HLLC格式是基于HLL格式的改进格式，通过引入左行波、右行波和中间波，实现准确捕捉接触间断。首先我们估计左右波速：
 		\[
@@ -293,7 +359,7 @@
 			\frac{U_i^{n+1} - U_i^n}{\Delta t} = -\frac{1}{\Delta x}(F^n_{i+\frac12} - F^n_{i-\frac12})
 		\]
 		
-		在计算单元边通量时，我们采取高低通量与限制器结合的格式：
+		在计算单元边界通量时，我们采取高低通量与限制器结合的格式。即高通量为空间离散采用中心差分格式得到的等价通量表达式，低通量为方程采用Lax格式离散得到的等价通量表达式：
 		\[
 			F^n_{i+\frac12} = F^{Low}_{i+\frac12} - \phi(r_i)(F^{Low}_{i+\frac12} - F^{High}_{i+\frac12})
 		\]
@@ -302,11 +368,11 @@
 			\begin{aligned}
 				r_i &= \frac{U_i - U_{i-1}}{U_{i+1} - U_i} \\
 				F^{Low}_{i+\frac12} &= \frac12(F_i + F_{i+1}) - \frac{\Delta x}{2\Delta t}(U_{i+1} - U_i) \\
-				F^{High}_{i+\frac12} = \frac12(F_i + F_{i+1})
+				F^{High}_{i+\frac12} &= \frac12(F_i + F_{i+1})
 			\end{aligned}
 		\]
 		
-		根据上述公式，我们可以推进计算近似解。
+		上述数学分析表明，我们在使用TVD格式的时候不需要使用FDS与FVS通量计算方法，且为了计算稳定与简便，我们不使用RK3方法进行求解。根据上述公式，我们可以推进计算近似解。
 		
 		
 	\section{代码生成与调试}
@@ -325,7 +391,7 @@
 			\item 根据Steger\_Warming公式计算守恒量通量项。
 			\item 根据NND格式计算每个位置的通量及守恒量。
 			\item 利用Runge-Kutta方法完成时间步推进。
-			\item 将每次计算结果重画在画布上，从而方便展示结果动态变化过程，同时我们生成视频。
+			\item 将每次计算结果重画在画布上，方便展示结果动态变化过程，同时方便我们生成视频。
 		\end{enumerate}
 		
 		\subsection{WENO+FDS+RK3方法}
@@ -341,9 +407,9 @@
 		我们在TVD.m文件中完成对Sod问题的近似求解。算法流程大致分为以下几个步骤：
 		\begin{enumerate}
 			\item 根据上述公式计算响应的低通量和高通量，以及计算相应的$r_i$。
-			\item 施加限制器，计算$F_{i+\frac12}$。
-			\item 利用Euler向前计算方法完成时间步推进。（尝试过RK3方法，但是效果并不如Euler方法好）
-			\item 将每次计算结果重画在画布上，从而方便展示结果动态变化过程，同时我们生成视频。
+			\item 施加限制器，根据公式计算$F_{i+\frac12}$。
+			\item 利用Euler向前计算方法完成时间步推进。
+			\item 将每次计算结果重画在画布上，方便展示结果动态变化过程，同时方便我们生成视频。
 		\end{enumerate}
 
 	\section{结果讨论}
@@ -356,8 +422,48 @@
 			\caption{\fontsize{10pt}{15pt}\selectfont Riemann精确解}
 		\end{minipage}
 		\end{figure}
-		结果表明，该问题解为右行激波、左行膨胀波的情况，并分别展示了速度、压强和密度的演化。在密度结果图中我们也发现了接触间断的位置。
-
+		在结果图中我们可以看到，蓝线为密度$\rho$，红线为速度$u$，黄线为压强$p$，时间取最终时刻$t=0.4$。在生成的视频中我们可以看到，激波被由右区向右传播，接触间断处的密度发生突变而速度、压强平稳，膨胀波在左区向左传播，速度和密度呈平滑衰减过渡，这三个特征波组成了黎曼问题的解析解。
+		
+		通过构造中间状态($p^*,u^*$)并结合Rankine\_Hugoniot跃迁关系与膨胀自相似解，解析得到任意时刻下t的密度、速度与压强分布，反映了一维Euler系统中典型非线性波动的演化规律。
+		
+		\subsection{计算域网格大小的关系}
+		以近似解中效果最好的NND+FVS+RK3求解方法为例，我们在LawOfDX.m文件中探究计算域网格大小对近似解求解效果的影响。
+		
+		我们分别设置$x \in [-1,1]$，设置空间间隔$dx=[0.1,0.05,0.01,0.005]$，设置$dt=0.001,t_{max} = 0.4$，依托NND+FVS+RK3的求解方法，得到不同空间间隔下关于速度$u$、压强$p$和密度$\rho$的数值解，将其与精确解画在一张图上，如图所示，可清晰观察到以下规律。
+		\begin{enumerate}
+			\item 整体趋势收敛明确。随着$dx$的减小，数值解逐渐向解析解收敛，误差明显减小，高分辨率（如$\Delta x = 0.005$下，数值解在各个间断与过渡区域都能精确捕捉波结构。
+			\item 在激波与接触间断区域，误差随网格明显变化。对于$u$和$\rho$曲线，在$\Delta x = 0.1,0.05$时，激波后方和接触面区域出现数值扩散，表现为过渡层变宽、台阶不平；而在更精确的网格密度时，这些结构更陡峭，跳跃位置也更准确。
+			\item 
+			膨胀波区表现稳定但解析精度随网格提升而增强。$p$与$\rho$在膨胀波区域的变化较为平滑，表现出 WENO 格式在光滑区域的高阶精度；网格粗时略有数值耗散，网格细化后解变得更贴近解析光滑曲线。
+			\item 数值解无明显振荡，方法稳定性良好。
+		\end{enumerate}
+		\begin{figure}[H]
+		\centering
+		\begin{minipage}{0.83\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{./fig/u.png}
+			\caption{\fontsize{10pt}{15pt}\selectfont 不同网格精度下速度$u$的解曲线}
+		\end{minipage}
+		\end{figure}
+		\begin{figure}[H]
+			\centering
+			\begin{minipage}{0.83\textwidth}
+				\centering
+				\includegraphics[width=\textwidth]{./fig/p.png}
+				\caption{\fontsize{10pt}{15pt}\selectfont 不同网格精度下压强$p$的解曲线}
+			\end{minipage}
+		\end{figure}
+		\begin{figure}[H]
+			\centering
+			\begin{minipage}{0.83\textwidth}
+				\centering
+				\includegraphics[width=\textwidth]{./fig/rho.png}
+				\caption{\fontsize{10pt}{15pt}\selectfont 不同网格精度下密度$\rho$的解曲线}
+			\end{minipage}
+		\end{figure}
+		整体而言，随着网格加密，数值解逐步逼近解析解，尤其在激波与接触面等间断区域表现出更高的分辨率和精度。
+		
+		
 		\subsection{NND+FVS+RK3方法}
 		\begin{figure}[H]
 			\centering
@@ -367,7 +473,7 @@
 				\caption{\fontsize{10pt}{15pt}\selectfont NND+FVS+RK3方法近似解}
 			\end{minipage}
 		\end{figure}
-		结果表明，该问题解与精确解相同。	
+		NND格式实现空间高阶重构，FVS方法处理通量，三阶RungeKutta格式进行时间推进。该组合兼具震波捕捉能力与无振荡性。左侧膨胀波区域密度与压强呈连续下降，速度线性上升，曲线形状平滑，较好还原解析解中的稀疏波；中间密度出现轻微但清晰的阶跃，速度与压强保持连续，未出现明显数值振荡，具有良好的非振荡性；右侧激波区域阶跃较为准确，表现出激波捕捉方面的稳健性。
 		
 		\subsection{WENO+FDS+RK3方法}
 		\begin{figure}[H]
@@ -378,7 +484,8 @@
 				\caption{\fontsize{10pt}{15pt}\selectfont WENO+FDS+RK3方法近似解}
 			\end{minipage}
 		\end{figure}
-		结果表明，该问题解与精确解相同。	
+		五阶WENO重构提升间断捕捉精度，基于波速分裂的HLLC的计算通量公式，显式三阶Runge-Kutta方法保持整体三阶时间精度构成了求近似解的组合。左侧膨胀波区域密度和压强平滑下降，速度线性上升，由于WENO方法在光滑区展现的高阶精度，几乎无数值耗散；中间接触间断处密度存在阶跃，压强和速度保持连续，接触面过渡范围小说明该组合高分辨率，且无明显数值振荡；右侧激波清晰紧凑，表明对激波结构捕捉良好的保形性。
+		
 		
 		\subsection{TVD方法}
 		\begin{figure}[H]
@@ -389,12 +496,65 @@
 				\caption{\fontsize{10pt}{15pt}\selectfont TVD方法近似解}
 			\end{minipage}
 		\end{figure}
-		结果表明，该问题解与精确解相同。	
+		TVD实现激波捕捉，确保总变差不增加，具有良好的稳定性和抑制非物理振荡的能力。从图中我们可以观察到，左侧膨胀波区域密度与压强光滑下降，速度连续上升，曲线过渡平稳，未见数值振荡，说明TVD格式成功保留了解的光滑性；中间接触间断处密度出现明显突变，速度与压强保持连续，阶跃未出现伪影，表明限制器有效限制了局部振荡；右侧激波区域密度、压强和速度出现阶跃，虽有一定程度的扩散，但位置准确，无数值震荡。
 			
+		\subsection{总结}
+		我们将三种方法结果与精确解置于一张图，并总结如下表：
+		\begin{figure}[H]
+			\centering
+			\begin{minipage}{0.83\textwidth}
+				\centering
+				\includegraphics[width=\textwidth]{./fig/u-2.png}
+				\caption{\fontsize{10pt}{15pt}\selectfont 不同求解方法速度$u$的解曲线}
+			\end{minipage}
+		\end{figure}
+		\begin{figure}[H]
+			\centering
+			\begin{minipage}{0.83\textwidth}
+				\centering
+				\includegraphics[width=\textwidth]{./fig/p-2.png}
+				\caption{\fontsize{10pt}{15pt}\selectfont 不同求解方法压强$p$的解曲线}
+			\end{minipage}
+		\end{figure}
+		\begin{figure}[H]
+			\centering
+			\begin{minipage}{0.83\textwidth}
+				\centering
+				\includegraphics[width=\textwidth]{./fig/rho-2.png}
+				\caption{\fontsize{10pt}{15pt}\selectfont 不同求解方法密度$\rho$的解曲线}
+			\end{minipage}
+		\end{figure}
+		图中将数值解与精确解进行对比，分别在三个物理量上呈现，不难看出各格式都能基本还原解的整体结构：膨胀波、接触间断和激波均可辨认；但在接触间断精度、激波过渡宽度、波前稳定性方面存在显著差异。
+		
+		TVD方法表现为最稳定的格式，几乎无数值振荡；但数值耗散最强，导致激波和接触面附近的跳跃区域变宽、变平缓；精度较低，但具有优秀的鲁棒性，适合粗网格/强间断问题。
+		
+		WENO+FDS方法在所有方法中表现出最好的高阶精度，膨胀波区平滑；激波位置贴合精确解；接触面跳跃更集中；略有小幅“台阶状”误差，原因可能是未使用特征重构或误差扩展到能量项；在分辨率和精度上达到较好平衡。
+		
+		NND+FVS方法表现介于TVD和WENO之间，相较于 TVD 有更清晰的跳跃结构；相较于 WENO，仍略显扩散，特别是在接触面区域；稳定性优于 WENO，误差略大于其，但收敛速度较好。
+		
+		\begin{table}[H]
+			\centering
+			\caption{三种格式的比较结果}
+			\begin{tabular}{lccc}
+				\toprule
+				特征维度 & TVD & WENO+FDS & NND+FVS \\
+				\midrule
+				振荡性       & 轻微振荡，较稳定   & 无振荡，较稳定     & 基本无振荡 \\
+				分辨率  & 接触面略有数值扩散     & 高分辨率，锐利分界   & 平衡稳定性与分辨率 \\
+				算法复杂度   & 简单，易于实现   & 复杂，需进行权重处理     & 略复杂，依赖重构方式 \\
+				计算效率 & 快速稳定 & 耗时多，重构成本较高 & 中等 \\
+				物理一致性 & 间断处有钝化趋势 & 精度高重 & 稳定守恒，非振荡性好 \\
+				\bottomrule
+			\end{tabular}
+		\end{table}
+		
 	\section{附录}
 		\begin{enumerate}
-			\item 本题在作流场二次涡图时使用chatGPT帮助撰写绘图matlab代码。
-			\item 本题代码文件设置较为清楚，且较为简单，故不使用git管理增加负担，无git管理记录。
+			\item Github管理说明：
+			本项目存于RobertRainbow/CFDFinal/的仓库中，具体分为：README.md文件用于帮助用户了解仓库代码结构及内容；Request.pdf文件为大作业要求；Report文件夹为latex语言完成报告相关文件；Code文件夹为matlab代码用于求解本作业问题。管理记录见图：
+			
+			\item AI使用说明：
+			本项目在进行Riemann精确解分析的时候使用了AI+网络资料搜索的部分代码参考，在完成其余各部分matlab代码时均为自己查阅相关书籍与论文时推导并编写的。总AI代码量约占100/1000=10%。
 		\end{enumerate}
 	
 \end{document}

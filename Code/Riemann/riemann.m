@@ -55,8 +55,9 @@ end
 u_star=(u1+u2-f1+f2)/2;
 
 %% 区域初始化（未扰动区）
-x = -1:0.001:1; % 空间区域
-t = 0:0.01:0.60; % 传播时间
+dx = 0.001;dt = 0.0002;
+x = linspace(-1,1,2/dx); % 空间区域
+t = linspace(0,0.40,0.4/dt); % 传播时间
 y = zeros(length(t),length(x),3);
 y(:,x<0,1) = u1;y(:,x<0,2) = p1;y(:,x<0,3) = rho1;
 y(:,x>=0,1) = u2;y(:,x>=0,2) = p2;y(:,x>=0,3) = rho2;
@@ -122,72 +123,56 @@ for i =1:length(t)
 end
 
 %% 结果可视化
-X = -1:0.001:1;  
-Y = 0:0.001:0.4;% 区域
-text = ['v','p','rho'];
-for num = 1:3
-    videostr = strcat(text(num),'.mp4');
-    v = VideoWriter(videostr,'MPEG-4');
-    v.FrameRate = 10;
-    open(v);
+x = linspace(-1,1,2/0.001);
+v = VideoWriter('RiemannExactSolve.mp4','MPEG-4');
+v.FrameRate = 30;
+open(v);
 
-    u = y(:,:,num); % 速度为1 压强为2 密度为3
-    [rows, cols] = size(u);
-    U=zeros(rows,cols,length(Y));
-    for k=1:rows
-        for i=1:cols
-            for j=1:length(Y)
-                U(k,i,j)=u(k,i);
-            end
-        end
-    end
-    t = 0:0.01:0.60;
-    for i=1:length(t)
-        Z_2D = U(i, :, :); 
-        Z_2D = squeeze(Z_2D); % 去除单一维度
-        [p,s] = contourf(X,Y,Z_2D',100);
-        xlabel("x");
-        ylabel("y");
-    
-        shading interp;
-        s.LineStyle = 'none';
-        axis equal;
-        colormap  jet;
-        colorbar;
-        drawnow;
-        ylabel(colorbar,text(num),'FontName','Times New Roman','FontWeight','bold')
-        % pause(0.01) %暂停 0.5 秒，用于控制动画的播放速度
+% 速度为1 压强为2 密度为3
+u = y(:,:,1);
+p = y(:,:,2);
+rho = y(:,:,3);
 
-        frame = getframe(gcf);
-        writeVideo(v,frame);
-    end
-    close(v);
+for i=1:length(t)
+    temp_u = u(i,:);
+    temp_p = p(i,:);
+    temp_rho = rho(i,:);
+    plot(x,temp_rho,x,temp_u,x,temp_p,'LineWidth', 2);
+    legend('rho', 'u', 'p');
+    title({'Sod Problem Solution';['t=',num2str(dt*i),'s']});
+    pause(0.0001);
+
+    frame = getframe(gcf);
+    writeVideo(v,frame);
+
 end
+close(v);
 
-%% 画曲线图
-x = -1:0.001:1;
 
-u_final   = squeeze(y(end, :, 1));  % 速度
-p_final   = squeeze(y(end, :, 2));  % 压强
-rho_final = squeeze(y(end, :, 3));  % 密度
-
-% 绘图
-figure;
-subplot(3,1,1);
-plot(x, u_final, 'b', 'LineWidth', 1.5);
-ylabel('u');
-title('t = 最后时间步');
-
-subplot(3,1,2);
-plot(x, p_final, 'r', 'LineWidth', 1.5);
-ylabel('p');
-
-subplot(3,1,3);
-plot(x, rho_final, 'k', 'LineWidth', 1.5);
-ylabel('\rho');
-xlabel('x');
-
-sgtitle('最终时刻 Sod 激波管 Riemann 精确解');
+% %% 画曲线图
+% x = -1:0.001:1;
+% 
+% u_final   = squeeze(y(end, :, 1));  % 速度
+% p_final   = squeeze(y(end, :, 2));  % 压强
+% rho_final = squeeze(y(end, :, 3));  % 密度
+% 
+% % 绘图
+% figure;
+% subplot(3,1,1);
+% plot(x, u_final, 'b', 'LineWidth', 1.5);
+% ylabel('u');
+% title('t = 最后时间步');
+% 
+% subplot(3,1,2);
+% plot(x, p_final, 'r', 'LineWidth', 1.5);
+% ylabel('p');
+% 
+% subplot(3,1,3);
+% plot(x, rho_final, 'k', 'LineWidth', 1.5);
+% ylabel('\rho');
+% xlabel('x');
+% 
+% sgtitle('最终时刻 Sod 激波管 Riemann 精确解');
 
 %% F_diff(p_star) 导数
 function[y] = F_diff(p_star)

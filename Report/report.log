@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2024.2.17)  16 JUN 2025 00:05
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2024.2.17)  20 JUN 2025 00:25
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -991,11 +991,11 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 [2]
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 221.
+(Font)              using `TU/ptm/m/it' instead on input line 212.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 221.
+(Font)              using `TU/ptm/m/it' instead on input line 212.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1006,13 +1006,37 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [3]
+Missing character: There is no 间 (U+95F4) in font [lmroman12-regular]:mapping=t
+ex-text;!
+Missing character: There is no 断 (U+65AD) in font [lmroman12-regular]:mapping=t
+ex-text;!
+Missing character: There is no 前 (U+524D) in font [lmroman12-regular]:mapping=t
+ex-text;!
+Missing character: There is no 间 (U+95F4) in font [lmroman12-regular]:mapping=t
+ex-text;!
+Missing character: There is no 断 (U+65AD) in font [lmroman12-regular]:mapping=t
+ex-text;!
+Missing character: There is no 后 (U+540E) in font [lmroman12-regular]:mapping=t
+ex-text;!
+Missing character: There is no 间 (U+95F4) in font [lmroman12-regular]:mapping=t
+ex-text;!
+Missing character: There is no 断 (U+65AD) in font [lmroman12-regular]:mapping=t
+ex-text;!
+Missing character: There is no 前 (U+524D) in font [lmroman12-regular]:mapping=t
+ex-text;!
+Missing character: There is no 间 (U+95F4) in font [lmroman12-regular]:mapping=t
+ex-text;!
+Missing character: There is no 断 (U+65AD) in font [lmroman12-regular]:mapping=t
+ex-text;!
+Missing character: There is no 后 (U+540E) in font [lmroman12-regular]:mapping=t
+ex-text;!
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 276.
+(Font)              using `TU/ptm/m/it' instead on input line 280.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 276.
+(Font)              using `TU/ptm/m/it' instead on input line 280.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1025,11 +1049,11 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 [4]
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 316.
+(Font)              using `TU/ptm/m/it' instead on input line 326.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 316.
+(Font)              using `TU/ptm/m/it' instead on input line 326.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1042,11 +1066,11 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 [5]
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 337.
+(Font)              using `TU/ptm/m/it' instead on input line 373.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 337.
+(Font)              using `TU/ptm/m/it' instead on input line 373.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1057,16 +1081,13 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [6]
-File: ./fig/Riemann.png Graphic file (type bmp)
-<./fig/Riemann.png>
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 395.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 359.
-
-
-LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 359.
+(Font)              using `TU/ptm/m/it' instead on input line 395.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1077,16 +1098,16 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [7]
-File: ./fig/app1.png Graphic file (type bmp)
-<./fig/app1.png>
+File: ./fig/Riemann.png Graphic file (type bmp)
+<./fig/Riemann.png>
 
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 370.
+(Font)              using `TU/ptm/m/it' instead on input line 425.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 370.
+(Font)              using `TU/ptm/m/it' instead on input line 425.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1097,16 +1118,13 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [8]
-File: ./fig/app2.png Graphic file (type bmp)
-<./fig/app2.png>
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 434.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 381.
-
-
-LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 381.
+(Font)              using `TU/ptm/m/it' instead on input line 434.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1117,16 +1135,20 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [9]
-File: ./fig/app3.png Graphic file (type bmp)
-<./fig/app3.png>
+File: ./fig/u.png Graphic file (type bmp)
+<./fig/u.png>
+File: ./fig/p.png Graphic file (type bmp)
+<./fig/p.png>
+File: ./fig/rho.png Graphic file (type bmp)
+<./fig/rho.png>
 
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 392.
+(Font)              using `TU/ptm/m/it' instead on input line 463.
 
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 392.
+(Font)              using `TU/ptm/m/it' instead on input line 463.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1137,17 +1159,16 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [10]
-
-Package caption Warning: Unused \captionsetup[table] on input line 57.
-See the caption package documentation for explanation.
-
-
-LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 400.
+File: ./fig/app1.png Graphic file (type bmp)
+<./fig/app1.png>
 
 
 LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
-(Font)              using `TU/ptm/m/it' instead on input line 400.
+(Font)              using `TU/ptm/m/it' instead on input line 476.
+
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 476.
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1157,26 +1178,123 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[11] (./report.aux)
+[11]
+File: ./fig/app2.png Graphic file (type bmp)
+<./fig/app2.png>
+
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 487.
+
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 487.
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[12]
+File: ./fig/app3.png Graphic file (type bmp)
+<./fig/app3.png>
+
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 499.
+
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 499.
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[13]
+File: ./fig/u-2.png Graphic file (type bmp)
+<./fig/u-2.png>
+File: ./fig/p-2.png Graphic file (type bmp)
+<./fig/p-2.png>
+
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 518.
+
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 518.
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[14]
+File: ./fig/rho-2.png Graphic file (type bmp)
+<./fig/rho-2.png>
+
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 528.
+
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 528.
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[15]
+Overfull \hbox (0.75595pt too wide) in paragraph at lines 538--549
+ [][] 
+ []
+
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 560.
+
+
+LaTeX Font Warning: Font shape `TU/ptm/m/sl' undefined
+(Font)              using `TU/ptm/m/it' instead on input line 560.
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[16] (./report.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-
-Package rerunfilecheck Warning: File `report.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `report.out':
-(rerunfilecheck)             Before: D225E0BD55837F6788836B306C3D5A84;1622
-(rerunfilecheck)             After:  6541B6813C88BE2F9EB7FAFBE03087A3;1816.
+Package rerunfilecheck Info: File `report.out' has not changed.
+(rerunfilecheck)             Checksum: 57FF4FA2B14455689890FBC2D6092920;2028.
  ) 
 Here is how much of TeX's memory you used:
- 20209 strings out of 476683
- 418560 string characters out of 5804929
- 1862012 words of memory out of 5000000
- 40082 multiletter control sequences out of 15000+600000
- 527354 words of font info for 119 fonts, out of 8000000 for 9000
+ 20321 strings out of 476683
+ 422340 string characters out of 5804929
+ 1864012 words of memory out of 5000000
+ 40181 multiletter control sequences out of 15000+600000
+ 528923 words of font info for 126 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 89i,12n,117p,384b,594s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 89i,12n,117p,384b,614s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on report.pdf (11 pages).
+Output written on report.pdf (16 pages).
